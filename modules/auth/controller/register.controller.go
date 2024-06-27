@@ -13,6 +13,7 @@ func Register(c echo.Context) (err error) {
 		Username: c.FormValue("username"),
 		Email:    c.FormValue("email"),
 		Password: c.FormValue("password"),
+		Image:    c.FormValue("image"),
 	}
 
 	e := c.Bind(&user)
