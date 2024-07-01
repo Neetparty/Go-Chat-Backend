@@ -1,8 +1,9 @@
-package auth_model
+package model
 
 import (
 	"Chat/configs"
 	"Chat/dto"
+	"Chat/libs"
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,23 +12,24 @@ import (
 func CreateUser(user dto.TRegister) dto.TRegisterResponse {
 	client := configs.Mongo
 	usr_coll := client.Database("go-chat").Collection("user")
-	room_col := client.Database("go-chat").Collection("room")
 
-	objectID, err := usr_coll.InsertOne(context.TODO(), user)
+	nUser := dto.TRegister{
+		Username:      user.Username,
+		Email:         user.Email,
+		Password:      user.Password,
+		Image:         user.Image,
+		TDefaultValue: libs.CreateDefaultValue(),
+	}
+
+	objectID, err := usr_coll.InsertOne(context.TODO(), nUser)
 
 	if err != nil {
 		panic(err)
 	}
 
-	_, room_err := room_col.InsertOne(context.TODO(), bson.D{{Key: "user_id", Value: objectID.InsertedID}})
-
-	if room_err != nil {
-		panic(room_err)
-	}
-
 	filter := bson.D{{Key: "_id", Value: objectID.InsertedID}}
 
-	get_err := usr_coll.FindOne(context.TODO(), filter).Decode(&user)
+	get_err := usr_coll.FindOne(context.TODO(), filter).Decode(&nUser)
 
 	if get_err != nil {
 		usr_coll.DeleteOne(context.TODO(), filter)
@@ -37,7 +39,7 @@ func CreateUser(user dto.TRegister) dto.TRegisterResponse {
 	newUser := dto.TRegisterResponse{
 		Message: "Thank you for registering!",
 		Status:  200,
-		Data:    user,
+		Data:    nUser,
 	}
 
 	return newUser

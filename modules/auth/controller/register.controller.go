@@ -1,8 +1,8 @@
-package auth_controller
+package controller
 
 import (
 	"Chat/dto"
-	auth_service "Chat/modules/auth/service"
+	service "Chat/modules/auth/service"
 
 	"github.com/labstack/echo/v4"
 )
@@ -22,7 +22,7 @@ func Register(c echo.Context) (err error) {
 		return e
 	}
 
-	newUser := auth_service.Register_Service(user)
+	newUser := service.Register_Service(user)
 
 	return c.JSON(200, newUser)
 

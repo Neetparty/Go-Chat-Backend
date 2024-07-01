@@ -5,6 +5,7 @@ type TRegister struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 	Image    string `json:"image"`
+	TDefaultValue
 }
 
 type TRegisterResponse struct {
