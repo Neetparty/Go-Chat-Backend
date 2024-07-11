@@ -13,12 +13,16 @@ func CreateUser(user dto.TRegister) dto.TRegisterResponse {
 	client := configs.Mongo
 	usr_coll := client.Database("go-chat").Collection("user")
 
+	dv := libs.CreateDefaultValue()
+
 	nUser := dto.TRegister{
-		Username:      user.Username,
-		Email:         user.Email,
-		Password:      user.Password,
-		Image:         user.Image,
-		TDefaultValue: libs.CreateDefaultValue(),
+		Username:  user.Username,
+		Email:     user.Email,
+		Password:  user.Password,
+		Image:     user.Image,
+		CreatedAt: dv.CreatedAt,
+		UpdatedAt: dv.UpdatedAt,
+		IsDeleted: dv.IsDeleted,
 	}
 
 	objectID, err := usr_coll.InsertOne(context.TODO(), nUser)

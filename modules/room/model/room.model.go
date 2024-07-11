@@ -13,9 +13,13 @@ func CreateRoom(room dto.TRoom) dto.TRoomResponse {
 	client := configs.Mongo
 	room_coll := client.Database("go-chat").Collection("room")
 
+	dv := libs.CreateDefaultValue()
+
 	newRoom := dto.TRoom{
-		Users:         room.Users,
-		TDefaultValue: libs.CreateDefaultValue(),
+		Users:     room.Users,
+		CreatedAt: dv.CreatedAt,
+		UpdatedAt: dv.UpdatedAt,
+		IsDeleted: dv.IsDeleted,
 	}
 
 	objectID, err := room_coll.InsertOne(context.TODO(), newRoom)
